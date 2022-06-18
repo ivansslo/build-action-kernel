@@ -46,9 +46,9 @@ jobs:
         apt-get -qq clean
         cp /usr/share/zoneinfo/Asia/Jakarta /etc/localtime
         mkdir -p /workdir
-        sudo mkdir -p /workdir/upload
+        sudo mkdir -p /workdir/upload/AnyKernel
         sudo chown $USER:$GROUPS /workdir
-        sudo chown $USER:$GROUPS /workdir/upload
+        sudo chown $USER:$GROUPS /workdir/upload/AnyKernel
 
     - name: Check for updates
       id: check
@@ -72,9 +72,9 @@ jobs:
         df -hT $PWD
         kernel_file=$(curl -s https://www.kernel.org/ | grep 'alt="Download"' | awk -F '"' '{print $2}')
         kernel_ver=$(curl -s https://git.kernel.org/ | grep ' <a href="https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/refs/tags/' | head -n 1 | awk -F '[>]' '{print $2}' | awk -F '[<]' '{print $1}')
-        git clone https://github.com/B4gol/Anykernel3 /workdir/upload/AnyKernel
-        git clone https://github.com/B4gol/platform-kernelist-xiaomi-rova /workdir/linux-$kernel_ver
-        cd /workdir/linux-$kernel_ver
+        git clone https://github.com/B4gol/Anykernel3 -b random upload/AnyKernel
+        wget -O https://android.googlesource.com/kernel/arm64/+archive/cf5001af85ca14d3fac20816a744d923477e2ff9.tar.gz $kernel_file/kernel.tar.gz
+        tar -xvf kernel.tar.gz -C /workdir && cd /workdir/linux-$kernel_ver
         echo "::set-output name=status::success"
 
     - name: SSH connection to Actions
