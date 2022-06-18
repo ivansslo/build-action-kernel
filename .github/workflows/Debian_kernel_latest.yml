@@ -73,7 +73,7 @@ jobs:
         kernel_file=$(curl -s https://www.kernel.org/ | grep 'alt="Download"' | awk -F '"' '{print $2}')
         kernel_ver=$(curl -s https://git.kernel.org/ | grep ' <a href="https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/refs/tags/' | head -n 1 | awk -F '[>]' '{print $2}' | awk -F '[<]' '{print $1}')
         git clone https://github.com/B4gol/Anykernel3 -b random upload/AnyKernel
-        wget -O https://android.googlesource.com/kernel/arm64/+archive/cf5001af85ca14d3fac20816a744d923477e2ff9.tar.gz $kernel_file/kernel.tar.gz
+        wget -O linux-4.9.314.tar.gz $kernel_file/kernel.tar.gz
         tar -xvf kernel.tar.gz -C /workdir && cd /workdir/linux-$kernel_ver
         echo "::set-output name=status::success"
 
