@@ -59,7 +59,7 @@ jobs:
         git clone https://github.com/B4gol/Anykernel3 /workdir/upload/AnyKernel
         git clone https://github.com/B4gol/platform-kernelist-xiaomi-rova /workdir/linux-
         
-        kernel_ver=$(/workdir/linux- | grep 'make kernelversion 2>/dev/null')
+        kernel_ver=$(/workdir/linux- | sudo grep 'make kernelversion 2>/dev/null')
         echo "github_ver=" $github_ver
         echo "kernel_ver=" $kernel_ver
         if [[ $github_ver == *"$kernel_ver"* ]]; then
@@ -75,7 +75,7 @@ jobs:
       run: |
         df -hT $PWD
         kernel_file=$(curl -s https://www.kernel.org/ | grep 'alt="Download"' | awk -F '"' '{print $2}')
-        kernel_ver=$(/workdir/linux- | grep 'make kernelversion 2>/dev/null')
+        kernel_ver=$(/workdir/linux- | sudo grep 'make kernelversion 2>/dev/null')
         cd /workdir/linux-$kernel_ver
         echo "::set-output name=status::success"
 
@@ -91,7 +91,7 @@ jobs:
       if: steps.code.outputs.status == 'success'
       working-directory: /workdir
       run: |
-        kernel_ver=$(/workdir/linux- | grep 'make kernelversion 2>/dev/null')
+        kernel_ver=$(/workdir/linux- | sudo grep 'make kernelversion 2>/dev/null')
         cd linux-$kernel_ver
         wget -O .config https://raw.githubusercontent.com/B4gol/build-action-kernel/msm8937/riva_defconfig
         sed -ri '/CONFIG_SYSTEM_TRUSTED_KEYS/s/=.+/=""/g' .config && scripts/config --disable MODULE_SIG && scripts/config --disable DEBUG_INFO
@@ -125,7 +125,7 @@ jobs:
       id: tag
       if: env.UPLOAD_RELEASE == 'true' && steps.compile.outputs.status == 'success' && !cancelled()
       run: |
-        kernel_ver=$(/workdir/linux- | grep 'make kernelversion 2>/dev/null')
+        kernel_ver=$(/workdir/linux- | sudo grep 'make kernelversion 2>/dev/null')
         echo "::set-output name=release_tag::Riva_Kernel_${kernel_ver}_latest_$(date +"%Y.%m.%d-%H%M")"
         touch release.txt
         echo "::set-output name=status::success"
