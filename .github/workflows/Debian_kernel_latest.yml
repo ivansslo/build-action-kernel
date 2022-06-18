@@ -55,7 +55,7 @@ jobs:
       run: |
         github_tag=$(curl -s 'https://api.github.com/repos/B4gol/build-action-kernel/releases' | grep 'msm8937_Kernel' | head -n 1 | awk -F '"' '{print $4}' | awk -F '[/]' '{print $8}')
         github_ver=$(curl -s 'https://api.github.com/repos/B4gol/build-action-kernel/releases' | grep ${github_tag}  | grep 'zip' | grep 'headers' | awk -F '"' '{print $4}' | awk -F '[/]' '{print $9}' | awk -F '[-]' '{print $3}' | awk -F '[_]' '{print $1}')
-        kernel_ver=$(curl -s https://git.kernel.org/ | grep ' <a href="https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/refs/tags/' | head -n 1 | awk -F '[>]' '{print $2}' | awk -F '[<]' '{print $1}')
+        kernel_ver=$(curl -s https://git.kernel.org/ | grep ' <a href="https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/refs/tags/v4.9.317/' | head -n 1 | awk -F '[>]' '{print $2}' | awk -F '[<]' '{print $1}')
         echo "github_ver=" $github_ver
         echo "kernel_ver=" $kernel_ver
         if [[ $github_ver == *"$kernel_ver"* ]]; then
@@ -71,9 +71,9 @@ jobs:
       run: |
         df -hT $PWD
         kernel_file=$(curl -s https://www.kernel.org/ | grep 'alt="Download"' | awk -F '"' '{print $2}')
-        kernel_ver=$(curl -s https://git.kernel.org/ | grep ' <a href="https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/refs/tags/' | head -n 1 | awk -F '[>]' '{print $2}' | awk -F '[<]' '{print $1}')
+        kernel_ver=$(curl -s https://git.kernel.org/ | grep ' <a href="https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/refs/tags/v4.9.317/' | head -n 1 | awk -F '[>]' '{print $2}' | awk -F '[<]' '{print $1}')
         git clone https://github.com/B4gol/Anykernel3 -b random upload/AnyKernel
-        wget -O linux-4.9.314.tar.gz $kernel_file/kernel.tar.gz
+        wget -O linux-4.9.317.tar.gz $kernel_file/kernel.tar.gz
         tar -xvf kernel.tar.gz -C /workdir && cd /workdir/linux-$kernel_ver
         echo "::set-output name=status::success"
 
@@ -89,7 +89,7 @@ jobs:
       if: steps.code.outputs.status == 'success'
       working-directory: /workdir
       run: |
-        kernel_ver=$(curl -s https://git.kernel.org/ | grep ' <a href="https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/refs/tags/' | head -n 1 | awk -F '[>]' '{print $2}' | awk -F '[<]' '{print $1}')
+        kernel_ver=$(curl -s https://git.kernel.org/ | grep ' <a href="https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/refs/tags/4.9.317/' | head -n 1 | awk -F '[>]' '{print $2}' | awk -F '[<]' '{print $1}')
         cd linux-$kernel_ver
         wget -O .config https://raw.githubusercontent.com/B4gol/build-action-kernel/msm8937/riva_defconfig
         sed -ri '/CONFIG_SYSTEM_TRUSTED_KEYS/s/=.+/=""/g' .config && scripts/config --disable MODULE_SIG && scripts/config --disable DEBUG_INFO
@@ -123,7 +123,7 @@ jobs:
       id: tag
       if: env.UPLOAD_RELEASE == 'true' && steps.compile.outputs.status == 'success' && !cancelled()
       run: |
-        kernel_ver=$(curl -s https://git.kernel.org/ | grep ' <a href="https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/refs/tags/' | head -n 1 | awk -F '[>]' '{print $2}' | awk -F '[<]' '{print $1}')
+        kernel_ver=$(curl -s https://git.kernel.org/ | grep ' <a href="https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/refs/tags/v4.9.317/' | head -n 1 | awk -F '[>]' '{print $2}' | awk -F '[<]' '{print $1}')
         echo "::set-output name=release_tag::Riva_Kernel_${kernel_ver}_latest_$(date +"%Y.%m.%d-%H%M")"
         touch release.txt
         echo "::set-output name=status::success"
