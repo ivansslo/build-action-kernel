@@ -67,16 +67,6 @@ jobs:
         tar -Jxvf kernel.tar.xz -C /workdir && cd /workdir/linux-$kernel_ver
         echo "::set-output name=status::success"
         
-    - name: Update Gcc on push
-      uses: B4gol/telegram-action@master
-      with:
-        to: ${{ secrets.TELEGRAM_TO }}
-        token: ${{ secrets.TELEGRAM_TOKEN }}
-        message: |
-          Release: ${{ steps.tag.outputs.release_tag }}
-          Complete: ${{ github.event_name }} Final step final request.
-        document: '/workdir/upload/*'
-
     - name: Compile the kernel
       id: compile
       if: steps.code.outputs.status == 'success'
@@ -128,6 +118,16 @@ jobs:
         touch release.txt
         echo "for centos 7" >> release.txt
         echo "::set-output name=status::success"
+        
+    - name: Update Gcc on push
+      uses: B4gol/telegram-action@master
+      with:
+        to: ${{ secrets.TELEGRAM_TO }}
+        token: ${{ secrets.TELEGRAM_TOKEN }}
+        message: |
+          Release: ${{ steps.tag.outputs.release_tag }}
+          Complete: ${{ github.event_name }} Final step final request.
+        document: '/workdir/upload/*'
 
     - name: Upload kernel to release
       uses: softprops/action-gh-release@v1
