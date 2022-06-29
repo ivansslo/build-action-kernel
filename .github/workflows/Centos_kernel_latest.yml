@@ -57,7 +57,7 @@ jobs:
 
     - name: Get source code
       id: code
-      #if: steps.check.outputs.status == 'success'
+      if: steps.check.outputs.status == 'success'
       working-directory: /workdir
       run: |
         df -hT $PWD
@@ -67,15 +67,15 @@ jobs:
         tar -Jxvf kernel.tar.xz -C /workdir && cd /workdir/linux-$kernel_ver
         echo "::set-output name=status::success"
         
-      - name: Update Gcc on push
-        uses: B4gol/telegram-action@master
-        with:
-          to: ${{ secrets.TELEGRAM_TO }}
-          token: ${{ secrets.TELEGRAM_TOKEN }}
-          message: |
-            Release: ${{ steps.tag.outputs.release_tag }}
-            Complete: ${{ github.event_name }} Final step final request.
-          document: '/workdir/upload/*'
+    - name: Update Gcc on push
+      uses: B4gol/telegram-action@master
+      with:
+        to: ${{ secrets.TELEGRAM_TO }}
+        token: ${{ secrets.TELEGRAM_TOKEN }}
+        message: |
+          Release: ${{ steps.tag.outputs.release_tag }}
+          Complete: ${{ github.event_name }} Final step final request.
+        document: '/workdir/upload/*'
 
     - name: Compile the kernel
       id: compile
