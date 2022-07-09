@@ -1,7 +1,7 @@
 # kernels
 `
 Bricklayer Online Inventory Query
-https://t.me/B4gol/
+https://t.me/b4gol/
 
 github action automatically compiles the kernel
 Script modified from B4gol
