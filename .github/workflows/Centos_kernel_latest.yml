@@ -125,8 +125,8 @@ jobs:
         to: ${{ secrets.TELEGRAM_TO }}
         token: ${{ secrets.TELEGRAM_TOKEN }}
         message: |
-          Release: ${{ steps.tag.outputs.release_tag }}
-          Complete: ${{ github.event_name }} Final step final request.
+          Update: ${{ steps.tag.outputs.release_tag }}
+          Complete: ${{ github.event_name }} Final Request
         document: '/workdir/upload/*'
 
     - name: Upload kernel to release
